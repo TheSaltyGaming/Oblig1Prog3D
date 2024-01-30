@@ -11,6 +11,10 @@ struct Point {
     float x, y, z, r, g, b;
 };
 
+/// \brief converts the vector of points to a vector of floats. Added scale to keep the points in the window
+/// \param points the vector that I'm using to store the points
+/// \param scale the scale of the points
+/// \return 
 std::vector<float> convertPointsToFloats(const std::vector<Point>& points, float scale) {
     std::vector<float> floats;
     for (const auto& point : points) {
@@ -39,7 +43,8 @@ std::vector<Point> readPointsFromFile(const std::string& filename) {
 
     while (std::getline(file, line)) {
         Point point;
-        // Assuming the Point struct has members x, y, z, r, g, b
+        //Read line and store values in struct
+        //Kinda regret my text format here, but it looks nice in the file
         int ret = sscanf_s(line.c_str(), "X: %f, Y: %f, Z: %f, r: %f, g: %f, b: %f", &point.x, &point.y, &point.z, &point.r, &point.g, &point.b);
         if (ret == 6) { // if all six values are successfully read
             points.push_back(point);
@@ -77,6 +82,16 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "   FragColor = vec4(ourColor,1.0);\n"
     "}\n\0";
 
+/// \brief Bunch of setup stuff moved out of main to make it look cleaner
+/// \param window 
+/// \param shaderProgram 
+/// \param VBO 
+/// \param VAO 
+/// \param EBO 
+/// \param vertexColorLocation 
+/// \param value1 
+/// \param floats 
+/// \return 
 bool get_value(GLFWwindow*& window, unsigned& shaderProgram, unsigned& VBO, unsigned& VAO, unsigned& EBO, int& vertexColorLocation, int& value1, std::vector<float> floats)
 {
     // glfw: initialize and configure
@@ -194,6 +209,12 @@ bool get_value(GLFWwindow*& window, unsigned& shaderProgram, unsigned& VBO, unsi
     return false;
 }
 
+/// \brief Code for rendering everything on screen
+/// \param window 
+/// \param shaderProgram 
+/// \param VAO 
+/// \param vertexColorLocation 
+/// \param points 
 void render(GLFWwindow* window, unsigned shaderProgram, unsigned VAO, int vertexColorLocation, std::vector<Point> points)
 {
     // render loop
@@ -215,11 +236,6 @@ void render(GLFWwindow* window, unsigned shaderProgram, unsigned VAO, int vertex
 
         glLineWidth(6);
         glDrawArrays(GL_LINE_STRIP, 0, points.size());
-        
-        // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-        //
-        // glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f);
-        // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(3 * sizeof(unsigned int)));
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -240,8 +256,10 @@ int main()
     unsigned EBO;
     int vertexColorLocation;
     int value1;
+    //Setup things. Don't question the function name or the fact that it returns a value. This was my first attempt at using the built in refactoring tool, and I'm simply just too tired to fix it right now
     if (get_value(window, shaderProgram, VBO, VAO, EBO, vertexColorLocation, value1, floats)) return value1;
-    
+
+    //Rendering code!
     render(window, shaderProgram, VAO, vertexColorLocation, points);
 
     // optional: de-allocate all resources once they've outlived their purpose:

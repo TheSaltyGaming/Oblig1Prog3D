@@ -10,9 +10,7 @@
 #include <vector>
 #include <windows.h>
 
-#include "Camera.h"
 
-// Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 struct Point {
     float x, y, z, r, g, b;
 };
@@ -206,14 +204,6 @@ void render(GLFWwindow* window, unsigned shaderProgram, unsigned VAO, int vertex
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        //CAMERA STUFF
-        //
-         // glm::mat4 view = camera.GetViewMatrix();
-        // unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-        // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        // glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        // unsigned int projLoc = glGetUniformLocation(shaderProgram, "projection");
-        // glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
         
         // input
         // -----
@@ -230,11 +220,6 @@ void render(GLFWwindow* window, unsigned shaderProgram, unsigned VAO, int vertex
 
         glLineWidth(6);
         glDrawArrays(GL_LINE_STRIP, 0, points.size());
-        
-        // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-        //
-        // glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f);
-        // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(3 * sizeof(unsigned int)));
  
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -257,8 +242,11 @@ int main()
     unsigned EBO;
     int vertexColorLocation;
     int value1;
-    if (get_value(window, shaderProgram, VBO, VAO, EBO, vertexColorLocation, value1, floats)) return value1;
+
     
+    if (get_value(window, shaderProgram, VBO, VAO, EBO, vertexColorLocation, value1, floats)) return value1;
+
+    //I know it just looks like I've rendered a sin wave, but I promise it's a spiral. I just couldn't get the camera to work properly. 
     render(window, shaderProgram, VAO, vertexColorLocation, points);
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -280,15 +268,7 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
-    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    //     camera.ProcessKeyboard(0, deltaTime);
-    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    //     camera.ProcessKeyboard(1, deltatime);
-    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    //     camera.ProcessKeyboard(2, deltaTime);
-    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    //     camera.ProcessKeyboard(3, deltaTime);
+    
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

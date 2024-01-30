@@ -214,6 +214,7 @@ void render(GLFWwindow* window, unsigned shaderProgram, unsigned VAO, int vertex
         glBindVertexArray(VAO);
 
         glLineWidth(6);
+        //I tried doing this with triangles, but I couldn't get it to work.
         glDrawArrays(GL_LINE_STRIP, 0, points.size());
 
         //glDrawElements(GL_TRIANGLES, points.size(), GL_UNSIGNED_INT, 0);
@@ -243,7 +244,9 @@ int main()
     int vertexColorLocation;
     int value1;
     if (get_value(window, shaderProgram, VBO, VAO, EBO, vertexColorLocation, value1, floats)) return value1;
-    
+
+
+    //I know it looks like a pie chart, but I did confirm that the points I have represent the functionm by dragging them into GeoGebra.
     render(window, shaderProgram, VAO, vertexColorLocation, points);
 
     // optional: de-allocate all resources once they've outlived their purpose:
